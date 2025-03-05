@@ -6,6 +6,7 @@ services:
     environment:
       NODE_ENV: ${NODE_ENV}
       BOT_TOKEN: ${BOT_TOKEN}
+      DB_PASS: ${DB_PASS}
     networks:
       - local
     deploy:
