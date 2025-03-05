@@ -33,6 +33,7 @@ WORKDIR /app
 COPY --from=dependencies --chown=node:node /app/node_modules ./node_modules
 COPY --from=build --chown=node:node /app/dist ./dist
 COPY entrypoint.sh ./
+RUN chmod +x ./entrypoint.sh
 
 USER node
 
