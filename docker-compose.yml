@@ -1,0 +1,42 @@
+version: "3.8"
+
+services:
+  application:
+    image: ghcr.io/kirshway/habit-tracker-bot/application:latest
+    environment:
+      NODE_ENV: ${NODE_ENV}
+      BOT_TOKEN: ${BOT_TOKEN}
+    networks:
+      - local
+    deploy:
+      replicas: 1
+      update_config:
+        failure_action: rollback
+        order: start-first
+      restart_policy:
+        condition: on-failure
+  postgres:
+    restart: unless-stopped
+    image: postgres:17-alpine
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_DB: postgres
+    networks:
+      - local
+      - bridge
+    user: postgres
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+volumes:
+  postgres-data:
+  postgres-backup:
+networks:
+  local:
+  bridge:
+    external:
+      name: bridge
