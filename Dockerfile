@@ -30,12 +30,12 @@ FROM base
 
 WORKDIR /app
 
-COPY --chown=node:node . .
 COPY --from=dependencies --chown=node:node /app/node_modules ./node_modules
 COPY --from=build --chown=node:node /app/dist ./dist
+COPY entrypoint.sh ./
 
 USER node
 
 ENTRYPOINT ["./entrypoint.sh"]
 
-CMD  ["pnpm", "start"]
+CMD ["pnpm", "start"]

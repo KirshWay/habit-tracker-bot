@@ -3,17 +3,19 @@ import { DataSource } from 'typeorm';
 
 dotenv.config();
 
+const isProduction = process.env.NODE_ENV === 'production';
+
 export const AppDataSource = new DataSource({
   type: 'postgres',
-  host: process.env.NODE_ENV === 'production' ? 'postgres' : 'localhost',
+  host: isProduction ? 'postgres' : 'localhost',
   port: 5432,
   username: 'postgres',
   password: process.env.DB_PASS,
   database: 'postgres',
   synchronize: false,
   logging: false,
-  entities: ['src/entities/*.ts'],
-  migrations: ['src/migrations/*.ts'],
+  entities: [isProduction ? 'dist/entities/*.js' : 'src/entities/*.ts'],
+  migrations: [isProduction ? 'dist/migrations/*.js' : 'src/migrations/*.ts'],
   subscribers: [],
 });
 
