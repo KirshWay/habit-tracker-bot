@@ -1,4 +1,4 @@
 #!/bin/bash
 set -e
-pnpm typeorm migration:run -d ./src/config/data-source.ts
+node ./node_modules/typeorm/cli.js migration:run -d ./dist/config/data-source.js
 exec "$@"
