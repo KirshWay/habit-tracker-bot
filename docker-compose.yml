@@ -4,7 +4,6 @@ services:
   application:
     image: ghcr.io/kirshway/habit-tracker-bot/application:latest
     environment:
-      NODE_ENV: ${NODE_ENV}
       BOT_TOKEN: ${BOT_TOKEN}
       DB_PASS: ${DB_PASS}
     networks:
@@ -16,8 +15,8 @@ services:
         order: start-first
       restart_policy:
         condition: on-failure
+
   postgres:
-    restart: unless-stopped
     image: postgres:17-alpine
     volumes:
       - postgres-data:/var/lib/postgresql/data
@@ -33,9 +32,10 @@ services:
       replicas: 1
       restart_policy:
         condition: on-failure
+
 volumes:
   postgres-data:
-  postgres-backup:
+
 networks:
   local:
   bridge:

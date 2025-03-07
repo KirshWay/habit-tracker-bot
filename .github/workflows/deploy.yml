@@ -58,6 +58,6 @@ jobs:
         run: |
           env BOT_TOKEN="${{ secrets.BOT_TOKEN }}" \
           env DB_PASS="${{ secrets.DB_PASS }}" \
-          docker stack deploy --prune --with-registry-auth -c docker-compose.yml habit-tracker-bot
+            docker stack deploy --prune --with-registry-auth -c docker-compose.yml habit-tracker-bot
         env:
           DOCKER_HOST: ssh://${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}

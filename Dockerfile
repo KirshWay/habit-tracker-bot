@@ -24,6 +24,7 @@ FROM base AS dependencies
 WORKDIR /app
 
 COPY package.json pnpm-lock.yaml ./
+
 RUN pnpm install --production
 
 FROM base
@@ -33,13 +34,14 @@ WORKDIR /app
 COPY --chown=node:node package.json pnpm-lock.yaml ./
 COPY --from=dependencies --chown=node:node /app/node_modules ./node_modules
 COPY --from=build --chown=node:node /app/dist ./dist
-COPY entrypoint.sh ./
-RUN chmod +x ./entrypoint.sh
+COPY --chown=node:node docker-entrypoint.sh ./
+
+RUN chmod +x docker-entrypoint.sh
 
 USER node
 
 ENV NODE_ENV=production
 
-ENTRYPOINT ["./entrypoint.sh"]
+ENTRYPOINT ["sh", "./docker-entrypoint.sh"]
 
 CMD ["pnpm", "start"]
