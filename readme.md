@@ -14,7 +14,7 @@ A Telegram bot for tracking daily habits built with modern technologies.
 1. **Clone the Repository:**
 
 ```bash
-git clone https://github.com/yourusername/habit-tracker-bot.git
+git clone https://github.com/KirshWay/habit-tracker-bot.git
 cd habit-tracker-bot
 ```
 
