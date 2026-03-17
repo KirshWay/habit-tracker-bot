@@ -6,6 +6,7 @@ services:
     environment:
       BOT_TOKEN: ${BOT_TOKEN}
       DB_PASS: ${DB_PASS}
+      RUN_MIGRATIONS: ${RUN_MIGRATIONS:-true}
     networks:
       - local
     deploy:
@@ -26,7 +27,6 @@ services:
       POSTGRES_DB: postgres
     networks:
       - local
-      - bridge
     user: postgres
     deploy:
       replicas: 1
@@ -38,6 +38,3 @@ volumes:
 
 networks:
   local:
-  bridge:
-    external:
-      name: bridge

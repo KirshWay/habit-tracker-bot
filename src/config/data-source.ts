@@ -1,29 +1,21 @@
-import * as dotenv from 'dotenv';
 import { DataSource } from 'typeorm';
 import path from 'path';
-
-dotenv.config();
-
-const isProduction = process.env.NODE_ENV === 'production';
+import { isProduction, requireEnv } from './env';
 
 const root = path.resolve(__dirname, '../..');
+const entitiesPath = path.join(root, isProduction ? 'dist/entities/*.js' : 'src/entities/*.ts');
+const migrationsPath = path.join(root, isProduction ? 'dist/migrations/*.js' : 'src/migrations/*.ts');
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
-  host: isProduction ? 'postgres' : 'localhost',
-  port: 5432,
+  host: process.env.DB_HOST || (isProduction ? 'postgres' : 'localhost'),
+  port: parseInt(process.env.DB_PORT || '5432', 10),
   username: 'postgres',
-  password: process.env.DB_PASS || 'postgres',
+  password: requireEnv('DB_PASS'),
   database: 'postgres',
   synchronize: false,
   logging: false,
-  entities: [path.join(root, isProduction ? 'dist' : 'src', 'entities/*.js')],
-  migrations: [path.join(root, isProduction ? 'dist' : 'src', 'migrations/*.js')],
+  entities: [entitiesPath],
+  migrations: [migrationsPath],
   subscribers: [],
 });
-
-AppDataSource.initialize()
-  .then(() => {
-    console.log("Data Source has been initialized!");
-  })
-  .catch((error) => console.error("Error during Data Source initialization:", error))

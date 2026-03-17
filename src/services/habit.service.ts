@@ -15,15 +15,24 @@ export class HabitService {
   }
 
   async listHabits(user: User): Promise<Habit[]> {
-    return this.habitRepository.find({ where: { user: { id: user.id } } });
+    return this.habitRepository.find({ where: { user: { id: user.id } }, order: { id: 'ASC' } });
   }
 
-  async deleteHabit(habitId: number): Promise<void> {
-    await this.habitRepository.delete(habitId);
+  async deleteHabit(userId: number, habitId: number): Promise<void> {
+    const result = await this.habitRepository
+      .createQueryBuilder()
+      .delete()
+      .from(Habit)
+      .where('id = :habitId AND "userId" = :userId', { habitId, userId })
+      .execute();
+
+    if (!result.affected) {
+      throw new Error('Habit not found');
+    }
   }
 
-  async markHabit(habitId: number): Promise<Habit> {
-    const habit = await this.habitRepository.findOne({ where: { id: habitId } });
+  async markHabit(userId: number, habitId: number): Promise<Habit> {
+    const habit = await this.habitRepository.findOne({ where: { id: habitId, user: { id: userId } } });
 
     if (!habit) throw new Error('Habit not found');
 
@@ -33,8 +42,8 @@ export class HabitService {
     return this.habitRepository.save(habit);
   }
 
-  async unmarkHabit(habitId: number): Promise<Habit> {
-    const habit = await this.habitRepository.findOne({ where: { id: habitId } });
+  async unmarkHabit(userId: number, habitId: number): Promise<Habit> {
+    const habit = await this.habitRepository.findOne({ where: { id: habitId, user: { id: userId } } });
 
     if (!habit) throw new Error('Habit not found');
 
